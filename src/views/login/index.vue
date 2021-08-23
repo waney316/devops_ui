@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">devops平台登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -42,11 +42,34 @@
           auto-complete="on"
           @keyup.enter.native="handleLogin"
         />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon
-            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-          />
+        <span
+          class="show-pwd"
+          @click="showPwd"
+        >
+          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
+      </el-form-item>
+      <el-form-item prop="code">
+        <el-row :span="20">
+          <el-col :span="12">
+            <el-input
+              v-model="loginForm.code"
+              auto-complete="off"
+              placeholder="请输入验证码"
+              size=""
+              @keyup.enter.native="submitForm('loginForm')"
+            />
+          </el-col>
+          <el-col :span="8">
+            <div
+              class="login-code"
+              @click="refreshCode"
+            >
+              <!--验证码组件-->
+              <s-identify :identify-code="identifyCode" />
+            </div>
+          </el-col>
+        </el-row>
       </el-form-item>
 
       <el-button
@@ -54,77 +77,109 @@
         type="primary"
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
-        >Login</el-button
-      >
+      >Login</el-button>
 
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
-      </div>
     </el-form>
   </div>
 </template>
 
 <script>
+import SIdentify from '@/components/Common/SIdentify.vue'
 export default {
-  name: "Login",
-  data() {
+  name: 'Login',
+  components: { SIdentify },
+  data () {
+    // 验证码自定义验证规则
+    const validateVerifycode = (rule, value, callback) => {
+      const newVal = value.toLowerCase()
+      const identifyStr = this.identifyCode.toLowerCase()
+      if (newVal === '') {
+        callback(new Error('请输入验证码'))
+      } else if (newVal !== identifyStr) {
+        console.log('validateVerifycode:', value)
+        callback(new Error('验证码不正确!'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
-        username: "admin",
-        password: "admin"
+        username: 'admin',
+        password: 'admin'
       },
+      identifyCode: '',
+      identifyCodes: '3456789ABCDEFGHGKMNPQRSTUVWXY',
       loginRules: {
         username: [
-          { required: true, trigger: "blur", message: "请输入用户名" }
+          { required: true, trigger: 'blur', message: '请输入用户名' }
         ],
-        password: [{ required: true, trigger: "blur", message: "请输入密码" }]
+        password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
+        code: [{ required: true, trigger: 'blur', message: '请输入验证码' }]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined
-    };
+    }
   },
   watch: {
     $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect;
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect
       },
       immediate: true
     }
   },
+  mounted () {
+    // 验证码初始化
+    this.identifyCode = ''
+    this.makeCode(this.identifyCodes, 4)
+  },
   methods: {
-    showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+    showPwd () {
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true;
+          this.loading = true
           this.$store
-            .dispatch("user/login", this.loginForm)
+            .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-              this.loading = false;
+              this.$router.push({ path: this.redirect || '/' })
+              this.loading = false
             })
             .catch(() => {
-              this.loading = false;
-            });
+              this.loading = false
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
+    },
+    randomNum (min, max) {
+      return Math.floor(Math.random() * (max - min) + min)
+    },
+    refreshCode () {
+      this.identifyCode = ''
+      this.makeCode(this.identifyCodes, 4)
+    },
+    makeCode (o, l) {
+      for (let i = 0; i < l; i++) {
+        this.identifyCode += this.identifyCodes[
+          this.randomNum(0, this.identifyCodes.length)
+        ]
+      }
     }
   }
-};
+}
 </script>
 
 <style lang="scss">

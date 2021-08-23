@@ -366,7 +366,10 @@ export default {
         is_superuser: [
           { required: true, message: '请选择是否管理员', trigger: 'change' }
         ],
-        roles: [{ required: true, message: '请选择角色', trigger: 'change' }]
+        roles: [{ required: true, message: '请选择角色', trigger: 'change' }],
+        phone: [
+          { min: 11, max: 11, message: '手机号必须为11位', trigger: 'blur' }
+        ]
       },
       roles: []
     }
@@ -402,12 +405,16 @@ export default {
     handleCreate () {
       this.dialogFormVisible = true
       this.dialogStatus = 'create'
+      this.dataForm = {}
       // 重置校验规则
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    handleSelect () { },
+    handleSelect (row) {
+      console.log(row)
+      this.$router.push({ path: `/system/user/details` })
+    },
     handleDelete (row, index) {
       this.$confirm('是否删除该用户', '提示', {
         confirmButtonText: '确定',
