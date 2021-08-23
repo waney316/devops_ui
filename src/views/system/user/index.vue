@@ -1,10 +1,7 @@
 <template>
   <div class="app-containter">
     <el-card class="box-card">
-      <div
-        slot="header"
-        class="clearfix"
-      >
+      <div slot="header" class="clearfix">
         <span>用户管理</span>
       </div>
 
@@ -16,7 +13,8 @@
             icon="el-icon-plus"
             style=" margin-right: 5px;"
             @click="handleCreate()"
-          >新 建</el-button>
+            >新 建</el-button
+          >
           <el-input
             v-model="listQuery.search"
             placeholder="请输入搜索用户"
@@ -42,45 +40,22 @@
         size="mini"
         style="width: 100%; margin-top: 10px;"
       >
-        <el-table-column
-          label="用户名"
-          prop="username"
-        />
-        <el-table-column
-          label="姓名"
-          prop="name"
-        />
-        <el-table-column
-          label="邮箱"
-          prop="email"
-        />
-        <el-table-column
-          label="是否管理员"
-          prop="is_superuser"
-        >
+        <el-table-column label="用户名" prop="username" />
+        <el-table-column label="姓名" prop="name" />
+        <el-table-column label="邮箱" prop="email" />
+        <el-table-column label="是否管理员" prop="is_superuser">
           <template slot-scope="{ row }">
-            <el-tag
-              v-if="row.is_superuser"
-              size="mini"
-              type="success"
-            >是</el-tag>
-            <el-tag
-              v-else
-              size="mini"
-              type="danger"
-            >否</el-tag>
+            <el-tag v-if="row.is_superuser" size="mini" type="success"
+              >是</el-tag
+            >
+            <el-tag v-else size="mini" type="danger">否</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-          label="在职状态"
-          prop="is_active"
-        >
+        <el-table-column label="在职状态" prop="is_active">
           <template slot-scope="{ row }">
-            <el-switch
-              v-model="row.is_active"
-              size="mini"
-              disabled
-            >否</el-switch>
+            <el-switch v-model="row.is_active" size="mini" disabled
+              >否</el-switch
+            >
           </template>
         </el-table-column>
         <el-table-column label="创建时间">
@@ -147,10 +122,7 @@
     </el-card>
 
     <!-- 更新和新增弹窗 -->
-    <el-dialog
-      :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
-    >
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -160,10 +132,7 @@
       >
         <el-row>
           <el-col :span="12">
-            <el-form-item
-              label="用户名"
-              prop="username"
-            >
+            <el-form-item label="用户名" prop="username">
               <el-input
                 v-model="dataForm.username"
                 placeholder="请输入用户名"
@@ -172,10 +141,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item
-              label="姓名"
-              prop="name"
-            >
+            <el-form-item label="姓名" prop="name">
               <el-input
                 v-model="dataForm.name"
                 placeholder="请输入姓名"
@@ -212,10 +178,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item
-              label="邮箱"
-              prop="email"
-            >
+            <el-form-item label="邮箱" prop="email">
               <el-input
                 v-model="dataForm.email"
                 placeholder="请输入邮箱"
@@ -224,10 +187,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item
-              label="角色"
-              prop="roles"
-            >
+            <el-form-item label="角色" prop="roles">
               <el-select
                 v-model="dataForm.roles"
                 multiple
@@ -246,10 +206,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item
-              label="手机号"
-              prop="phone"
-            >
+            <el-form-item label="手机号" prop="phone">
               <el-input
                 v-model="dataForm.phone"
                 placeholder="请输入手机号"
@@ -258,10 +215,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item
-              label="职位描述"
-              prop="position"
-            >
+            <el-form-item label="职位描述" prop="position">
               <el-input
                 v-model="dataForm.position"
                 placeholder="请输入职位描述"
@@ -271,14 +225,8 @@
           </el-col>
 
           <el-col :span="12">
-            <el-form-item
-              label="是否管理员"
-              prop="is_superuser"
-            >
-              <el-radio-group
-                v-model="dataForm.is_superuser"
-                size="mini"
-              >
+            <el-form-item label="是否管理员" prop="is_superuser">
+              <el-radio-group v-model="dataForm.is_superuser" size="mini">
                 <el-radio :label="true">是</el-radio>
                 <el-radio :label="false">否</el-radio>
               </el-radio-group>
@@ -286,14 +234,8 @@
           </el-col>
         </el-row>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          size="small"
-          @click="dialogFormVisible = false"
-        >
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogFormVisible = false">
           关闭
         </el-button>
         <el-button
@@ -305,6 +247,70 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="用户详情" :visible.sync="dialogDetailVisible">
+      <el-form :model="Detailform" size="mini">
+        <el-row :gutter="24">
+          <el-col :span="8">
+            <el-form-item label="ID" label-width="120">
+              <el-input
+                v-model="Detailform.id"
+                autocomplete="off"
+              ></el-input> </el-form-item
+          ></el-col>
+          <el-col :span="8">
+            <el-form-item label="姓名" label-width="120">
+              <el-input
+                v-model="Detailform.name"
+                autocomplete="off"
+              ></el-input> </el-form-item
+          ></el-col>
+          <el-col :span="8">
+            <el-form-item label="用户名" label-width="120">
+              <el-input
+                v-model="Detailform.username"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="8">
+            <el-form-item label="邮箱" label-width="120">
+              <el-input
+                v-model="Detailform.email"
+                autocomplete="off"
+              ></el-input> </el-form-item
+          ></el-col>
+          <el-col :span="8">
+            <el-form-item label="手机" label-width="120">
+              <el-input
+                v-model="Detailform.phone"
+                autocomplete="off"
+              ></el-input> </el-form-item
+          ></el-col>
+          <el-col :span="8">
+            <el-form-item label="职位" label-width="120">
+              <el-input
+                v-model="Detailform.position"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogDetailVisible = false" size="mini"
+          >取 消</el-button
+        >
+        <el-button
+          size="mini"
+          type="primary"
+          @click="dialogDetailVisible = false"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -314,24 +320,24 @@ import {
   createUser,
   deleteUser,
   updateUser
-} from '@/api/system/user'
-import { getRoleList } from '@/api/system/role'
+} from "@/api/system/user";
+import { getRoleList } from "@/api/system/role";
 
-import waves from '@/directive/waves' // waves directive
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import waves from "@/directive/waves"; // waves directive
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
   components: { Pagination },
   directives: { waves },
-  data () {
+  data() {
     // 前后密码校验
     const validateCheckPass = (rule, value, callback) => {
       if (value !== this.dataForm.password) {
-        callback(new Error('两次密码不一致'))
+        callback(new Error("两次密码不一致"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
 
     return {
       list: [],
@@ -344,215 +350,230 @@ export default {
       listLoading: false,
 
       dialogFormVisible: false,
-      dialogStatus: '',
+      dialogStatus: "",
       textMap: {
-        'update': '编辑用户',
-        'create': '新建用户'
+        update: "编辑用户",
+        create: "新建用户"
       },
       rules: [],
       dataForm: {},
       rules: {
-        name: { required: true, message: '请输入姓名', trigger: 'blur' },
-        username: { required: true, message: '请输入用户名', trigger: 'blur' },
+        name: { required: true, message: "请输入姓名", trigger: "blur" },
+        username: { required: true, message: "请输入用户名", trigger: "blur" },
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 4, message: '至少大于4位', trigger: 'blur' }
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 4, message: "至少大于4位", trigger: "blur" }
         ],
         checkPassword: [
-          { required: true, message: '请输入确认密码', trigger: 'blur' },
-          { trigger: 'blur', validator: validateCheckPass }
+          { required: true, message: "请输入确认密码", trigger: "blur" },
+          { trigger: "blur", validator: validateCheckPass }
         ],
-        email: { type: 'email', required: true, message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
+        email: {
+          type: "email",
+          required: true,
+          message: "请输入正确的邮箱地址",
+          trigger: ["blur", "change"]
+        },
         is_superuser: [
-          { required: true, message: '请选择是否管理员', trigger: 'change' }
+          { required: true, message: "请选择是否管理员", trigger: "change" }
         ],
-        roles: [{ required: true, message: '请选择角色', trigger: 'change' }],
+        roles: [{ required: true, message: "请选择角色", trigger: "change" }],
         phone: [
-          { min: 11, max: 11, message: '手机号必须为11位', trigger: 'blur' }
+          { min: 11, max: 11, message: "手机号必须为11位", trigger: "blur" }
         ]
       },
-      roles: []
-    }
+      roles: [],
+
+      dialogDetailVisible: false,
+      Detailform: {}
+    };
   },
-  created () {
-    this.userList()
-    this.roleList()
+  created() {
+    this.userList();
+    this.roleList();
   },
-  mounted () { },
+  mounted() {},
   methods: {
     // 获取用户列表
-    userList () {
-      this.listLoading = true
+    userList() {
+      this.listLoading = true;
       getUserList(this.listQuery).then(response => {
-        console.log(response.data)
-        this.list = response.data.results
-        this.total = response.data.count
-        this.listLoading = false
-      })
+        console.log(response.data);
+        this.list = response.data.results;
+        this.total = response.data.count;
+        this.listLoading = false;
+      });
     },
     // 获取角色列表
-    roleList () {
+    roleList() {
       getRoleList().then(response => {
         if (response.code === 0) {
-          this.roles = response.data.results
+          this.roles = response.data.results;
         }
-      })
+      });
     },
 
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     },
-    handleCreate () {
-      this.dialogFormVisible = true
-      this.dialogStatus = 'create'
-      this.dataForm = {}
+    handleCreate() {
+      this.dialogFormVisible = true;
+      this.dialogStatus = "create";
+      this.dataForm = {};
       // 重置校验规则
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs["dataForm"].clearValidate();
+      });
+    },
+    handleSelect(row) {
+      console.log(row);
+      // this.$router.push({ path: `/system/user/details` });
+      this.Detailform = Object.assign({}, row);
+      this.dialogDetailVisible = true;
+    },
+    handleDelete(row, index) {
+      this.$confirm("是否删除该用户", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
-    },
-    handleSelect (row) {
-      console.log(row)
-      this.$router.push({ path: `/system/user/details` })
-    },
-    handleDelete (row, index) {
-      this.$confirm('是否删除该用户', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteUser(row.id).then(response => {
-          if (response.code === 0) {
-            this.userList()
-            this.$notify({
-              title: '成功',
-              message: response.message,
-              type: 'success',
-              duration: 2000
-            })
-          } else {
-            this.$notify({
-              title: '失败',
-              message: response.message,
-              type: 'error',
-              duration: 2000
-            })
-          }
+        .then(() => {
+          deleteUser(row.id).then(response => {
+            if (response.code === 0) {
+              this.userList();
+              this.$notify({
+                title: "成功",
+                message: response.message,
+                type: "success",
+                duration: 2000
+              });
+            } else {
+              this.$notify({
+                title: "失败",
+                message: response.message,
+                type: "error",
+                duration: 2000
+              });
+            }
+          });
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
-    handleUpdate (row) {
-      this.dataForm = Object.assign({}, row)
-      this.dialogFormVisible = true
-      this.dialogStatus = 'update'
+    handleUpdate(row) {
+      this.dataForm = Object.assign({}, row);
+      this.dialogFormVisible = true;
+      this.dialogStatus = "update";
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+        this.$refs["dataForm"].clearValidate();
+      });
     },
-    handleFilter () {
-      this.listQuery.page = 1
-      this.userList()
+    handleFilter() {
+      this.listQuery.page = 1;
+      this.userList();
     },
-    createData () {
-      this.$refs['dataForm'].validate((valid) => {
+    createData() {
+      this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          delete this.dataForm.checkPassword
+          delete this.dataForm.checkPassword;
           createUser(this.dataForm).then(response => {
             if (response.code === 0) {
-              this.userList()
-              this.dialogFormVisible = false
+              this.userList();
+              this.dialogFormVisible = false;
               this.$notify({
-                title: '成功',
+                title: "成功",
                 message: response.message,
-                type: 'success',
+                type: "success",
                 duration: 2000
-              })
+              });
             } else {
-              this.dialogFormVisible = false
+              this.dialogFormVisible = false;
               this.$notify({
-                title: '失败',
+                title: "失败",
                 message: response.message,
-                type: 'error',
+                type: "error",
                 duration: 2000
-              })
+              });
             }
-          })
+          });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
-    updateData () {
-      this.$refs['dataForm'].validate((valid) => {
+    updateData() {
+      this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          const tempData = Object.assign({}, this.dataForm)
-          delete tempData.avator
+          const tempData = Object.assign({}, this.dataForm);
+          delete tempData.avator;
+          delete tempData.password;
           updateUser(this.dataForm.id, tempData).then(response => {
             if (response.code === 0) {
-              this.userList()
-              this.dialogFormVisible = false
+              this.userList();
+              this.dialogFormVisible = false;
               this.$notify({
-                title: '成功',
+                title: "成功",
                 message: response.message,
-                type: 'success',
+                type: "success",
                 duration: 2000
-              })
+              });
             } else {
-              this.dialogFormVisible = false
+              this.dialogFormVisible = false;
               this.$notify({
-                title: '失败',
+                title: "失败",
                 message: response.message,
-                type: 'error',
+                type: "error",
                 duration: 2000
-              })
+              });
             }
-          })
+          });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     // 重置用户密码和密码长度校验
-    validatePassword (value) {
-      return !(value.length < 4)
+    validatePassword(value) {
+      return !(value.length < 4);
     },
-    handleResetPass (row) {
-      this.$prompt(`请输入 "${row.username}" 密码 `, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputType: 'password',
+    handleResetPass(row) {
+      this.$prompt(`请输入 "${row.username}" 密码 `, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputType: "password",
         inputValidator: this.validatePassword,
-        inputErrorMessage: '密码长度至少为4位'
-      }).then(({ value }) => {
-        var resetPassForm = {
-          username: row.username,
-          password: value
-        }
-        updateUser(row.id, resetPassForm).then(response => {
-          if (response.code === 0) {
-            this.$message({
-              type: 'success',
-              message: `更新用户 ${row.username} 密码为 ${value}`,
-              duration: 2000
-            })
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        })
+        inputErrorMessage: "密码长度至少为4位"
       })
+        .then(({ value }) => {
+          var resetPassForm = {
+            username: row.username,
+            password: value
+          };
+          updateUser(row.id, resetPassForm).then(response => {
+            if (response.code === 0) {
+              this.$message({
+                type: "success",
+                message: `更新用户 ${row.username} 密码为 ${value}`,
+                duration: 2000
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消输入"
+          });
+        });
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less"></style>
