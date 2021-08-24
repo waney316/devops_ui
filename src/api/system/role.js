@@ -1,33 +1,33 @@
-import request from "@/utils/request";
+import request from '@/utils/request'
 
 // 获取角色列表
 export function getRoleList(params) {
   return request({
-    url: "/api/v1/system/role/",
-    method: "get",
+    url: '/api/v1/system/role/',
+    method: 'get',
     params
-  });
+  })
 }
 
 export function createRole(data) {
   return request({
-    url: "/api/v1/system/role/",
-    method: "post",
+    url: '/api/v1/system/role/',
+    method: 'post',
     data
-  });
+  })
 }
 
 export function updateRole(id, data) {
   return request({
     url: `/api/v1/system/role/${id}/`,
-    method: "put",
+    method: 'put',
     data
-  });
+  })
 }
 
 export function deleteRole(id) {
   return request({
-    url: `/api/v1/system/role/${id}`,
-    method: "delete"
-  });
+    url: `/api/v1/system/role/${id}/`,
+    method: 'delete'
+  })
 }
