@@ -91,15 +91,16 @@ export default {
   data () {
     // 验证码自定义验证规则
     const validateVerifycode = (rule, value, callback) => {
-      const newVal = value.toLowerCase()
-      const identifyStr = this.identifyCode.toLowerCase()
-      if (newVal === '') {
-        callback(new Error('请输入验证码'))
-      } else if (newVal !== identifyStr) {
-        console.log('validateVerifycode:', value)
-        callback(new Error('验证码不正确!'))
+      if (value === '' || value === undefined) {
+        callback(new Error('请输入验证码22'))
       } else {
-        callback()
+        const newVal = value.toLowerCase()
+        const identifyStr = this.identifyCode.toLowerCase()
+        if (newVal !== identifyStr) {
+          callback(new Error('验证码不正确!'))
+        } else {
+          callback()
+        }
       }
     }
     return {
@@ -114,7 +115,7 @@ export default {
           { required: true, trigger: 'blur', message: '请输入用户名' }
         ],
         password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
-        code: [{ required: true, trigger: 'blur', message: '请输入验证码' }]
+        code: [{ required: true, trigger: 'blur', validator: validateVerifycode }]
       },
       loading: false,
       passwordType: 'password',

@@ -45,22 +45,32 @@
         <el-table-column
           label="角色编号"
           width="80"
+          align="center"
         >
           <template slot-scope="{ row }">
             {{ row.id }}
           </template>
         </el-table-column>
-        <el-table-column label="角色名称">
+        <el-table-column
+          label="角色名称"
+          align="center"
+        >
           <template slot-scope="{ row }">
             {{ row.name }}
           </template>
         </el-table-column>
-        <el-table-column label="角色权限标识">
+        <el-table-column
+          label="角色权限标识"
+          align="center"
+        >
           <template slot-scope="{ row }">
             {{ row.key }}
           </template>
         </el-table-column>
-        <el-table-column label="显示顺序">
+        <el-table-column
+          label="显示顺序"
+          align="center"
+        >
           <template slot-scope="{ row }">
             {{ row.sort }}
           </template>
@@ -69,13 +79,17 @@
         <el-table-column
           label="备注信息"
           min-width="160"
+          align="center"
         >
           <template slot-scope="{ row }">
             {{ row.remarks }}
           </template>
         </el-table-column>
 
-        <el-table-column label="创建时间">
+        <el-table-column
+          label="创建时间"
+          align="center"
+        >
           <template slot-scope="{ row }">
             {{ row.create_time }}
           </template>
@@ -87,14 +101,6 @@
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{ row, $index }">
-            <el-button
-              type="text"
-              size="mini"
-              icon="el-icon-edit"
-              @click="handleSelect(row)"
-            >
-              查看
-            </el-button>
             <el-button
               type="text"
               size="mini"
@@ -115,9 +121,9 @@
               size="mini"
               type="text"
               icon="el-icon-key"
-              @click="handleResetPass(row, $index)"
+              @click="handlePermission(row, $index)"
             >
-              数据权限
+              权限
             </el-button>
           </template>
         </el-table-column>
@@ -133,7 +139,7 @@
       />
     </el-card>
 
-    <!-- 更新和新增弹窗 -->
+    <!-- 角色编辑 -->
     <el-dialog
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
@@ -211,6 +217,54 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <!-- 角色权限 -->
+    <el-dialog
+      title="角色权限"
+      :visible.sync="dialogPermVisible"
+      width="30%"
+    >
+
+      <el-input
+        v-model="filterText"
+        placeholder="请输入名"
+        class="input-with-select"
+        size="small"
+        style="margin-bottom: 10px"
+      >
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+        />
+      </el-input>
+
+      <el-tree
+        ref="tree"
+        class="filter-tree"
+        :data="treeData"
+        show-checkbox
+        node-key="id"
+        highlight-current
+        default-expand-all
+        :props="defaultProps"
+        :filter-node-method="filterNode"
+      />
+
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          size="mini"
+          @click="dialogPermVisible = false"
+        >取 消</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="dialogPermVisible = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -221,6 +275,8 @@ import {
   deleteRole,
   updateRole
 } from '@/api/system/role'
+
+import { getPermissionTree } from '@/api/system/permission'
 
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -241,6 +297,16 @@ export default {
 
       dialogFormVisible: false,
       dialogStatus: '',
+
+      // 权限弹窗
+      filterText: '',
+      dialogPermVisible: false,
+      treeData: [],
+      defaultProps: {
+        children: 'children',
+        label: 'title'
+      },
+
       textMap: {
         update: '编辑角色',
         create: '新建角色'
@@ -255,11 +321,22 @@ export default {
       roles: []
     }
   },
+  watch: {
+    filterText (val) {
+      this.$refs.tree.filter(val)
+    }
+  },
   created () {
     this.roleList()
+    this.getPermissionData()
   },
   mounted () { },
   methods: {
+    // 树搜索过滤
+    filterNode (value, data) {
+      if (!value) return true
+      return data.title.indexOf(value) !== -1
+    },
     // 获取角色列表
     roleList () {
       getRoleList(this.listQuery).then(response => {
@@ -282,10 +359,7 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    handleSelect (row) {
-      console.log(row)
-      // this.$router.push({ path: `/system/user/details` })
-    },
+
     handleDelete (row, index) {
       this.$confirm('是否删除该角色', '提示', {
         confirmButtonText: '确定',
@@ -328,7 +402,6 @@ export default {
       })
     },
     handleFilter () {
-      console.log(this.listQuery)
       this.listQuery.page = 1
       this.roleList()
     },
@@ -369,11 +442,11 @@ export default {
           delete tempData.avator
           updateRole(this.dataForm.id, tempData).then(response => {
             if (response.code === 0) {
-              this.userList()
+              this.roleList()
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',
-                message: '新建角色成功',
+                message: '更新角色成功',
                 type: 'success',
                 duration: 2000
               })
@@ -426,6 +499,17 @@ export default {
             message: '取消输入'
           })
         })
+    },
+    // 获取权限树
+    getPermissionData () {
+      getPermissionTree().then(response => {
+        this.treeData = response.data
+        console.log(this.treeData)
+      })
+    },
+    // 修改用户相关权限
+    handlePermission (row) {
+      this.dialogPermVisible = true
     }
   }
 }
