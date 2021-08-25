@@ -20,7 +20,7 @@ export function getPermissionTree(params) {
 //获取当前用户权限标识
 export function getUserpermissions(params) {
   return request({
-    url: "/api/v1/system/user/user_permission/",
+    url: "/api/v1/system/user_permission",
     method: "get",
     params
   });
