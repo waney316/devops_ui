@@ -8,6 +8,7 @@
       <div class="text item">
         <div class="filter-container">
           <el-button
+            v-permisaction="['system:user:create']"
             type="primary"
             size="mini"
             icon="el-icon-plus"
@@ -84,6 +85,7 @@
         >
           <template slot-scope="{ row, $index }">
             <el-button
+              v-permisaction="['system:user:select']"
               type="text"
               size="mini"
               icon="el-icon-edit"
@@ -92,6 +94,7 @@
               查看
             </el-button>
             <el-button
+              v-permisaction="['system:user:edit']"
               type="text"
               size="mini"
               icon="el-icon-edit"
@@ -100,6 +103,7 @@
               编辑
             </el-button>
             <el-button
+              v-permisaction="['system:user:delete']"
               size="mini"
               type="text"
               icon="el-icon-delete"
@@ -108,6 +112,7 @@
               删除
             </el-button>
             <el-button
+              v-permisaction="['system:user:edit']"
               size="mini"
               type="text"
               icon="el-icon-key"

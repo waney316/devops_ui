@@ -8,6 +8,7 @@
       <div class="text item">
         <div class="filter-container">
           <el-button
+            v-permisaction="['system:role:create']"
             type="primary"
             size="mini"
             icon="el-icon-plus"
@@ -80,6 +81,7 @@
         >
           <template slot-scope="{ row, $index }">
             <el-button
+              v-permisaction="['system:role:edit']"
               type="text"
               size="mini"
               icon="el-icon-edit"
@@ -88,6 +90,7 @@
               编辑
             </el-button>
             <el-button
+              v-permisaction="['system:role:delete']"
               size="mini"
               type="text"
               icon="el-icon-delete"
@@ -96,6 +99,7 @@
               删除
             </el-button>
             <el-button
+              v-permisaction="['system:role:permission:edit']"
               size="mini"
               type="text"
               icon="el-icon-key"
@@ -451,8 +455,20 @@ export default {
     },
     // 修改用户相关权限
     handlePermission(row) {
+      console.log(row);
       this.dialogPermVisible = true;
       this.currentRole = Object.assign({}, row);
+      this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys([]);
+        row.permissions.map((i, n) => {
+          // 根据i获取tree中的节点
+          const node = this.$refs.tree.getNode(i);
+          if (node && node.isLeaf) {
+            // 设置某个节点的勾选状态
+            this.$refs.tree.setChecked(node, true);
+          }
+        });
+      });
     },
 
     updatePermission() {

@@ -96,6 +96,7 @@ function filterAsyncRouter(asyncRouterMap) {
         Message.error(e.message);
       }
     }
+    // route.name = route.name;
     route.meta = {
       title: route.title,
       icon: route.icon

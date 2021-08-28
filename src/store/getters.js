@@ -6,6 +6,10 @@ const getters = {
   name: state => state.user.name,
   //权限和菜单
   menus: state => state.system.menus,
-  permisaction: state => state.system.permisaction
+  permisaction: state => state.system.permisaction,
+
+  //tagsView缓存
+  visitedViews: state => state.tagsView.visitedViews,
+  cachedViews: state => state.tagsView.cachedViews
 };
 export default getters;
