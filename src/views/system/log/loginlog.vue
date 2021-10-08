@@ -7,53 +7,22 @@
 
       <div class="text item">
         <div class="filter-container">
-          <span class="span_style">请求方式</span>
-          <el-select
-            v-model="listQuery.method"
-            clearable
-            placeholder="请选择请求方式"
-            size="mini"
-          >
-            <el-option
-              v-for="(item, index) in requestOptions"
-              :key="index"
-              :label="item"
-              :value="item"
-            >
-            </el-option>
-          </el-select>
           <span class="span_style">请求用户</span>
           <el-input
             v-model="listQuery.username"
-            placeholder="请输入请求用户"
+            placeholder="请输入登录请求用户"
             size="mini"
+            clearable
             style="width: 150px"
-          >
-          </el-input>
-          <span class="span_style">请求路径</span>
-
-          <el-input
-            v-model="listQuery.url"
-            placeholder="请输入请求路径"
-            size="mini"
-            style="width: 200px"
-          >
-          </el-input>
+          />
           <el-button
             type="primary"
             icon="el-icon-search"
             size="mini"
             style="margin-left: 10px"
+            @click="handleFilter()"
           >
             搜索</el-button
-          >
-          <el-button
-            type="button"
-            icon="el-icon-refresh"
-            size="mini"
-            style="margin-left: 10px"
-          >
-            重置</el-button
           >
         </div>
       </div>
@@ -68,28 +37,25 @@
         size="mini"
         style="width: 100%; margin-top: 20px;"
       >
-        <el-table-column label="请求IP" prop="remote_ip" />
-        <el-table-column label="用户" prop="username" />
-        <el-table-column label="请求方式" prop="method">
+        <el-table-column label="登录IP" prop="remote_ip" />
+        <el-table-column label="登录用户" prop="username" />
+        <el-table-column label="请求主体" prop="body" min-width="160">
           <template slot-scope="{ row }">
-            <el-tag> {{ row.method }}</el-tag>
+            {{ row.body }}
           </template>
         </el-table-column>
-        <el-table-column label="请求路径" prop="url" min-width="160" />
-        <el-table-column
-          label="请求参数"
-          prop="query_string"
-          show-overflow-tooltip
-        />
-        <el-table-column label="响应状态码">
-          <template slot-scope="{ row }" v-if>
-            <el-tag v-if="(row.status_code = 200)" type="success">{{
-              row.status_code
-            }}</el-tag>
-            <el-tag v-else type="danger">{{ row.status_code }}</el-tag>
+
+        <el-table-column label="是否登录成功">
+          <template slot-scope="{ row }">
+            <el-tag v-if="row.status_code == 200" type="success">
+              {{ row.status }}/{{ row.status_code }}
+            </el-tag>
+            <el-tag v-else type="danger">
+              {{ row.status }}/{{ row.status_code }}</el-tag
+            >
           </template>
         </el-table-column>
-        <el-table-column label="请求时间">
+        <el-table-column label="登录时间">
           <template slot-scope="{ row }">
             {{ row.create_time }}
           </template>
@@ -102,14 +68,14 @@
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
-        @pagination="auditLogList"
+        @pagination="loginLogList"
       />
     </el-card>
   </div>
 </template>
 
 <script>
-import { getAuditLog } from "@/api/log/log";
+import { getLoginLog } from "@/api/log/log";
 
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
@@ -126,17 +92,18 @@ export default {
         page: 1,
         limit: 10
       },
-      listLoading: false,
-      requestOptions: ["PUT", "POST", "GET", "DELETE"]
+      listLoading: false
     };
   },
-  created() {},
+  created() {
+    this.loginLogList();
+  },
   mounted() {},
   methods: {
     // 获取操作日志
-    auditLogList() {
+    loginLogList() {
       this.listLoading = true;
-      getAuditLog(this.listQuery).then(response => {
+      getLoginLog(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.results;
         this.total = response.data.count;
@@ -148,56 +115,9 @@ export default {
       this.$refs[formName].resetFields();
     },
 
-    handleSelect(row) {
-      console.log(row);
-      // this.$router.push({ path: `/system/user/details` });
-      this.Detailform = Object.assign({}, row);
-      this.dialogDetailVisible = true;
-    },
-    handleDelete(row, index) {
-      this.$confirm("是否删除该用户", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          deleteUser(row.id).then(response => {
-            if (response.code === 0) {
-              this.userList();
-              this.$notify({
-                title: "成功",
-                message: response.message,
-                type: "success",
-                duration: 2000
-              });
-            } else {
-              this.$notify({
-                title: "失败",
-                message: response.message,
-                type: "error",
-                duration: 2000
-              });
-            }
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    handleUpdate(row) {
-      this.dataForm = Object.assign({}, row);
-      this.dialogFormVisible = true;
-      this.dialogStatus = "update";
-      this.$nextTick(() => {
-        this.$refs["dataForm"].clearValidate();
-      });
-    },
     handleFilter() {
       this.listQuery.page = 1;
-      this.userList();
+      this.loginLogList();
     }
   }
 };

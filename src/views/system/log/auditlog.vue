@@ -19,41 +19,33 @@
               :key="index"
               :label="item"
               :value="item"
-            >
-            </el-option>
+            />
           </el-select>
           <span class="span_style">请求用户</span>
           <el-input
             v-model="listQuery.username"
+            clearable
             placeholder="请输入请求用户"
             size="mini"
             style="width: 150px"
-          >
-          </el-input>
+          />
           <span class="span_style">请求路径</span>
 
           <el-input
-            v-model="listQuery.url"
+            v-model="listQuery.search"
+            clearable
             placeholder="请输入请求路径"
             size="mini"
             style="width: 200px"
-          >
-          </el-input>
+          />
           <el-button
             type="primary"
             icon="el-icon-search"
             size="mini"
             style="margin-left: 10px"
+            @click="handleFilter()"
           >
             搜索</el-button
-          >
-          <el-button
-            type="button"
-            icon="el-icon-refresh"
-            size="mini"
-            style="margin-left: 10px"
-          >
-            重置</el-button
           >
         </div>
       </div>
@@ -82,7 +74,7 @@
           show-overflow-tooltip
         />
         <el-table-column label="响应状态码">
-          <template slot-scope="{ row }" v-if>
+          <template v-if slot-scope="{ row }">
             <el-tag v-if="(row.status_code = 200)" type="success">{{
               row.status_code
             }}</el-tag>
@@ -146,60 +138,9 @@ export default {
       });
     },
 
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-
-    handleSelect(row) {
-      console.log(row);
-      // this.$router.push({ path: `/system/user/details` });
-      this.Detailform = Object.assign({}, row);
-      this.dialogDetailVisible = true;
-    },
-    handleDelete(row, index) {
-      this.$confirm("是否删除该用户", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          deleteUser(row.id).then(response => {
-            if (response.code === 0) {
-              this.userList();
-              this.$notify({
-                title: "成功",
-                message: response.message,
-                type: "success",
-                duration: 2000
-              });
-            } else {
-              this.$notify({
-                title: "失败",
-                message: response.message,
-                type: "error",
-                duration: 2000
-              });
-            }
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    handleUpdate(row) {
-      this.dataForm = Object.assign({}, row);
-      this.dialogFormVisible = true;
-      this.dialogStatus = "update";
-      this.$nextTick(() => {
-        this.$refs["dataForm"].clearValidate();
-      });
-    },
     handleFilter() {
       this.listQuery.page = 1;
-      this.userList();
+      this.auditLogList();
     }
   }
 };

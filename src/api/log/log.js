@@ -8,3 +8,12 @@ export function getAuditLog(params) {
     params
   });
 }
+
+// 获取请求登录日志
+export function getLoginLog(params) {
+  return request({
+    url: "/api/v1/audit/login_log",
+    method: "get",
+    params
+  });
+}
